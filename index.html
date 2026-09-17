@@ -1,3 +1,6 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0E4F4A">
 <title>Ficha de Obra Sil</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -53,6 +56,13 @@
   }
 
   *{box-sizing:border-box}
+  html{
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    background:var(--ground);
+  }
+  img{max-width:100%}
+  [hidden]{display:none !important}
   body{
     margin:0;
     background:var(--ground);
@@ -218,6 +228,18 @@
   }
   details summary{cursor:pointer;font-size:15px;color:var(--muted);padding:6px 0}
   footer.pe{margin-top:22px;font-size:13px;color:var(--muted);text-align:center}
+
+  @media (max-width:390px){
+    body{font-size:16px}
+    header.top h1{font-size:25px}
+    .step-body,.amb-body{padding:13px}
+    .chip{padding:10px 11px;font-size:14px}
+    .big2 .chip{font-size:16px}
+    .medida-row input{padding:10px 6px}
+    .extra{grid-template-columns:1fr 88px}
+    .area-out .v{font-size:22px}
+    .tot .v{font-size:30px}
+  }
 
   @media (prefers-reduced-motion:no-preference){
     .amb{animation:pop .18s ease-out}

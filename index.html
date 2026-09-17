@@ -1,0 +1,866 @@
+<title>Ficha de Obra Sil</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F1;
+    --surface:#FFFFFF;
+    --surface-2:#F7F9F8;
+    --ink:#12201E;
+    --muted:#576764;
+    --line:#D6DEDB;
+    --line-strong:#B6C2BF;
+    --accent:#0E4F4A;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#DDEAE7;
+    --flag:#B07A06;
+    --flag-soft:#FBEFD5;
+    --danger:#A32117;
+    --radius:10px;
+    --tap:52px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0D1413;
+      --surface:#161F1E;
+      --surface-2:#1C2726;
+      --ink:#E7EEEC;
+      --muted:#9AAFAB;
+      --line:#2A3634;
+      --line-strong:#3D4E4B;
+      --accent:#4FC3B4;
+      --accent-ink:#08201D;
+      --accent-soft:#183330;
+      --flag:#F0BE57;
+      --flag-soft:#2E2512;
+      --danger:#F08A80;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0D1413;
+    --surface:#161F1E;
+    --surface-2:#1C2726;
+    --ink:#E7EEEC;
+    --muted:#9AAFAB;
+    --line:#2A3634;
+    --line-strong:#3D4E4B;
+    --accent:#4FC3B4;
+    --accent-ink:#08201D;
+    --accent-soft:#183330;
+    --flag:#F0BE57;
+    --flag-soft:#2E2512;
+    --danger:#F08A80;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:17px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:600px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+
+  /* ---------- topo ---------- */
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    margin-inline:-16px;
+    padding:22px 16px 20px;
+  }
+  .brandline{
+    font-family:Archivo,sans-serif;font-weight:700;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;opacity:.75;margin:0 0 6px;
+  }
+  header.top h1{
+    font-family:Archivo,sans-serif;font-weight:700;font-size:28px;line-height:1.1;
+    margin:0 0 10px;text-wrap:balance;
+  }
+  header.top p{margin:0;font-size:15px;opacity:.85;max-width:44ch}
+
+  /* ---------- passos ---------- */
+  .step{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-top:18px;
+    overflow:hidden;
+  }
+  .step > h2{
+    display:flex;align-items:center;gap:10px;
+    margin:0;padding:14px 16px;
+    font-family:Archivo,sans-serif;font-weight:600;font-size:17px;
+    border-bottom:1px solid var(--line);
+    background:var(--surface-2);
+  }
+  .num{
+    flex:0 0 26px;height:26px;border-radius:50%;
+    background:var(--accent);color:var(--accent-ink);
+    display:grid;place-items:center;
+    font-size:14px;font-weight:700;font-family:Archivo,sans-serif;
+  }
+  .step-body{padding:16px;display:flex;flex-direction:column;gap:16px}
+
+  label.field{display:flex;flex-direction:column;gap:6px}
+  .lab{
+    font-family:Archivo,sans-serif;font-weight:600;font-size:12px;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  }
+  input[type=text],input[type=tel],input[type=date],input[type=number],textarea{
+    font:inherit;color:var(--ink);background:var(--surface);
+    border:1.5px solid var(--line-strong);border-radius:8px;
+    padding:12px;min-height:var(--tap);width:100%;
+  }
+  input[type=number]{font-variant-numeric:tabular-nums}
+  textarea{min-height:80px;resize:vertical}
+  input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
+    outline:3px solid var(--flag);outline-offset:2px;
+  }
+
+  /* ---------- chips ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font:inherit;font-size:15px;
+    background:var(--surface);color:var(--ink);
+    border:1.5px solid var(--line-strong);border-radius:8px;
+    padding:11px 13px;min-height:46px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600;
+  }
+  .chip[aria-pressed="true"] svg [data-t]{fill:var(--accent-ink)}
+  .chip[aria-pressed="true"] svg [data-b]{stroke:var(--accent-ink);opacity:.5}
+  .chip.ghost{border-style:dashed;color:var(--muted);font-size:14px;min-height:42px}
+  .chip svg{flex:0 0 22px}
+  .chip svg [data-t]{fill:var(--ink)}
+  .chip svg [data-b]{stroke:var(--surface);stroke-width:1.4;opacity:.55}
+
+  .big2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .big2 .chip{justify-content:center;min-height:56px;font-size:17px}
+
+  /* ---------- cards de ambiente ---------- */
+  .amb{
+    border:1.5px solid var(--line-strong);border-radius:var(--radius);
+    background:var(--surface-2);overflow:hidden;
+  }
+  .amb-head{
+    display:flex;align-items:center;gap:8px;
+    padding:10px 10px 10px 14px;
+    background:var(--accent-soft);border-bottom:1px solid var(--line);
+  }
+  .amb-head .tag{
+    font-family:Archivo,sans-serif;font-weight:700;font-size:12px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--accent);flex:1;
+  }
+  .icon-btn{
+    font:inherit;font-size:14px;background:transparent;color:var(--danger);
+    border:1.5px solid currentColor;border-radius:8px;padding:6px 10px;
+    min-height:38px;cursor:pointer;
+  }
+  .amb-body{padding:14px;display:flex;flex-direction:column;gap:14px}
+
+  .medida-row{display:flex;align-items:center;gap:8px}
+  .medida-row input{flex:1;min-width:0;text-align:center}
+  .times{color:var(--muted);font-size:18px;flex:0 0 auto}
+  .medida-row .icon-btn{flex:0 0 auto;padding:6px 9px}
+
+  .area-out{
+    display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:10px 14px;
+  }
+  .area-out .k{font-family:Archivo,sans-serif;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .area-out .v{font-family:Archivo,sans-serif;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+  .hint{font-size:14px;color:var(--muted);margin:0}
+  .warn{
+    font-size:14px;background:var(--flag-soft);color:var(--flag);
+    border-left:4px solid var(--flag);border-radius:0 6px 6px 0;padding:9px 12px;margin:0;
+  }
+
+  /* ---------- extras ---------- */
+  .extra{
+    display:grid;grid-template-columns:1fr 104px;gap:10px;align-items:center;
+    padding:9px 0;border-bottom:1px solid var(--line);
+  }
+  .extra:last-child{border-bottom:0}
+  .extra .nome{font-size:16px;line-height:1.25}
+  .extra .un{display:block;font-size:13px;color:var(--muted)}
+  .extra input{min-height:46px;padding:8px;text-align:center}
+
+  /* ---------- resumo ---------- */
+  .tot{
+    background:var(--accent);color:var(--accent-ink);
+    border-radius:var(--radius);padding:16px;
+  }
+  .tot .k{font-family:Archivo,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+  .tot .v{font-family:Archivo,sans-serif;font-weight:700;font-size:34px;font-variant-numeric:tabular-nums;line-height:1.1}
+  .tot .sub{font-size:14px;opacity:.85;margin-top:4px}
+  .linhas{display:flex;flex-direction:column;gap:2px;margin-top:12px;font-size:15px;font-variant-numeric:tabular-nums}
+  .linhas div{display:flex;justify-content:space-between;gap:12px}
+
+  .btn{
+    font:inherit;font-family:Archivo,sans-serif;font-weight:600;font-size:17px;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    width:100%;min-height:58px;padding:14px;border-radius:10px;
+    border:1.5px solid var(--accent);background:var(--accent);color:var(--accent-ink);
+    cursor:pointer;text-decoration:none;
+  }
+  .btn.sec{background:var(--surface);color:var(--accent)}
+  .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+  .erro{color:var(--danger);font-size:15px;margin:0}
+
+  textarea#saida{
+    font-family:"IBM Plex Sans",monospace;font-size:14px;line-height:1.45;
+    background:var(--surface-2);min-height:220px;
+  }
+  details summary{cursor:pointer;font-size:15px;color:var(--muted);padding:6px 0}
+  footer.pe{margin-top:22px;font-size:13px;color:var(--muted);text-align:center}
+
+  @media (prefers-reduced-motion:no-preference){
+    .amb{animation:pop .18s ease-out}
+    @keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  }
+
+  /* ---------- impressão: ficha em branco ---------- */
+  .papel{display:none}
+  @media print{
+    .no-print{display:none !important}
+    body{background:#fff;color:#000;font-size:11pt}
+    .wrap{max-width:none;padding:0}
+    .papel{display:block}
+    .papel h1{font-family:Archivo,sans-serif;font-size:18pt;margin:0 0 2mm}
+    .papel .sub{font-size:9pt;margin:0 0 4mm}
+    .papel table{width:100%;border-collapse:collapse;margin-bottom:5mm}
+    .papel th,.papel td{border:1px solid #000;padding:2.4mm 1.6mm;font-size:9pt;text-align:left}
+    .papel th{background:#eee;font-family:Archivo,sans-serif;font-size:8pt;text-transform:uppercase;letter-spacing:.05em}
+    .papel td{height:9mm}
+    .papel .cab td{height:7mm}
+    .papel .leg{font-size:8pt;line-height:1.4}
+    @page{size:A4;margin:12mm}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="top no-print">
+    <p class="brandline">Revestimentos Sil</p>
+    <h1>Ficha de obra</h1>
+    <p>Preencha na hora da visita. No final, o botão verde monta a mensagem pronta para mandar no WhatsApp.</p>
+  </header>
+
+  <main class="no-print">
+
+    <!-- 1 CLIENTE -->
+    <section class="step">
+      <h2><span class="num">1</span> Quem é o cliente</h2>
+      <div class="step-body">
+        <label class="field"><span class="lab">Nome do cliente</span>
+          <input type="text" id="cli-nome" placeholder="Ex.: Moisés" autocomplete="off"></label>
+        <label class="field"><span class="lab">Endereço da obra</span>
+          <input type="text" id="cli-obra" placeholder="Rua, número, bairro" autocomplete="off"></label>
+        <label class="field"><span class="lab">Telefone</span>
+          <input type="tel" id="cli-tel" placeholder="(11) 90000-0000" autocomplete="off"></label>
+        <label class="field"><span class="lab">Data da visita</span>
+          <input type="date" id="cli-data"></label>
+      </div>
+    </section>
+
+    <!-- 2 AMBIENTES -->
+    <section class="step">
+      <h2><span class="num">2</span> Ambientes</h2>
+      <div class="step-body">
+        <p class="hint">Um cartão para cada lugar. Piso e parede do mesmo cômodo são <strong>dois cartões</strong> — o preço é diferente.</p>
+        <div id="lista" style="display:flex;flex-direction:column;gap:14px"></div>
+        <button class="btn sec" id="add-amb" type="button">+ Adicionar ambiente</button>
+      </div>
+    </section>
+
+    <!-- 3 EXTRAS -->
+    <section class="step">
+      <h2><span class="num">3</span> Serviços extras</h2>
+      <div class="step-body">
+        <p class="hint">Só preencha o que for fazer. Deixe em branco o resto.</p>
+        <div id="extras"></div>
+      </div>
+    </section>
+
+    <!-- 4 RESUMO -->
+    <section class="step">
+      <h2><span class="num">4</span> Conferir e mandar</h2>
+      <div class="step-body">
+        <div class="tot">
+          <div class="k">Prévia do valor</div>
+          <div class="v" id="t-total">R$ 0,00</div>
+          <div class="sub" id="t-sub">Nenhum ambiente preenchido ainda</div>
+          <div class="linhas" id="t-linhas"></div>
+        </div>
+
+        <label class="field"><span class="lab">Observação para o Bruno (opcional)</span>
+          <textarea id="obs" placeholder="Ex.: cliente vai comprar o piso semana que vem; contrapiso está torto na cozinha"></textarea></label>
+
+        <p class="erro" id="erro" role="status"></p>
+
+        <a class="btn" id="wa" href="#" target="_blank" rel="noopener">Mandar no WhatsApp</a>
+        <button class="btn sec" id="copiar" type="button">Copiar o texto</button>
+
+        <details>
+          <summary>Ver o texto que vai ser enviado</summary>
+          <textarea id="saida" readonly></textarea>
+        </details>
+
+        <details>
+          <summary>Outras opções</summary>
+          <div style="display:flex;flex-direction:column;gap:10px;padding-top:8px">
+            <button class="btn sec" id="imprimir" type="button">Imprimir ficha em branco (papel)</button>
+            <button class="btn sec" id="limpar" type="button" style="border-color:var(--line-strong);color:var(--muted)">Começar uma ficha nova</button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="pe">
+      Os valores são de mão de obra. Material por conta do cliente.<br>
+      Esta ficha fica salva no celular até você começar uma nova.
+    </footer>
+  </main>
+
+  <!-- ficha de papel (só aparece na impressão) -->
+  <div class="papel">
+    <h1>FICHA DE OBRA — REVESTIMENTOS SIL</h1>
+    <p class="sub">Preencher na visita · mão de obra apenas · material por conta do cliente</p>
+    <table>
+      <tr class="cab"><td><strong>Cliente:</strong></td><td colspan="2"></td><td><strong>Data:</strong></td><td></td></tr>
+      <tr class="cab"><td><strong>Obra:</strong></td><td colspan="2"></td><td><strong>Telefone:</strong></td><td></td></tr>
+    </table>
+    <table>
+      <tr>
+        <th style="width:26%">Ambiente</th>
+        <th style="width:13%">Piso ou parede</th>
+        <th style="width:22%">Medidas (m)</th>
+        <th style="width:11%">Área m²</th>
+        <th style="width:13%">Peça</th>
+        <th style="width:15%">Paginação</th>
+      </tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+    <table>
+      <tr><th colspan="2">Serviços extras — anotar a quantidade</th><th colspan="2">Serviços extras</th></tr>
+      <tr><td>Retirada de piso antigo (m²)</td><td style="width:18%"></td><td>Soleira / peitoril (un)</td><td style="width:18%"></td></tr>
+      <tr><td>Contrapiso / regularização (m²)</td><td></td><td>Rejunte epóxi (m²)</td><td></td></tr>
+      <tr><td>Autonivelante (m²)</td><td></td><td>Recorte especial / furo (un)</td><td></td></tr>
+      <tr><td>Rodapé (metros)</td><td></td><td>Impermeabilização de box (m²)</td><td></td></tr>
+    </table>
+    <table>
+      <tr><th>Observações</th></tr>
+      <tr><td style="height:16mm"></td></tr>
+    </table>
+    <p class="leg">
+      <strong>Piso ou parede:</strong> escreva PISO ou PAREDE. &nbsp;·&nbsp;
+      <strong>Peça:</strong> 45x45 · 60x60 · 70x70 · 80x80 · maior que 80x80. &nbsp;·&nbsp;
+      <strong>Paginação:</strong> reta · amarração · diagonal · espinha de peixe.<br>
+      Medidas em metros, comprimento × largura (parede: largura × altura). Depois é só tirar a foto da ficha e mandar.
+    </p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- tabela de preços (espelha a planilha) ---------- */
+  var BASE = {aberta:50, media:70, pequena:90, parede:70};
+  var PROD = {aberta:12, media:9, pequena:6, parede:7};     // m² por dia
+  var NOME_TIPO = {
+    aberta:"Área aberta acima de 10 m²",
+    media:"Área média de 5 a 10 m²",
+    pequena:"Área pequena até 5 m²",
+    parede:"Parede / revestimento vertical"
+  };
+  var PECAS = [
+    {id:"45", rot:"Até 45x45", fator:0.85},
+    {id:"60", rot:"60x60",     fator:1},
+    {id:"70", rot:"70x70",     fator:1.08},
+    {id:"80", rot:"80x80",     fator:1.15},
+    {id:"90", rot:"Maior que 80x80", fator:1.45, visita:true}
+  ];
+  var PAGS = [
+    {id:"reta",     rot:"Reta",            add:0,  icone:"reta"},
+    {id:"amarra",   rot:"Amarração",       add:8,  icone:"amarra"},
+    {id:"diagonal", rot:"Diagonal",        add:25, icone:"diagonal"},
+    {id:"espinha",  rot:"Espinha de peixe",add:35, icone:"espinha"}
+  ];
+  var EXTRAS = [
+    {id:"retirada",  rot:"Retirada de piso antigo",   un:"m²", preco:20},
+    {id:"contrapiso",rot:"Contrapiso / regularização",un:"m²", preco:55},
+    {id:"nivel",     rot:"Nivelamento autonivelante", un:"m²", preco:70},
+    {id:"rodape",    rot:"Assentamento de rodapé",    un:"m",  preco:20},
+    {id:"soleira",   rot:"Soleira / peitoril",        un:"un", preco:90},
+    {id:"epoxi",     rot:"Rejunte epóxi (adicional)", un:"m²", preco:35},
+    {id:"recorte",   rot:"Recorte especial / furo",   un:"un", preco:25},
+    {id:"box",       rot:"Impermeabilização de box",  un:"m²", preco:65}
+  ];
+  var MINIMO = 900;
+  var SUGESTOES = ["Sala","Quarto","Cozinha","Banheiro","Lavanderia","Varanda","Área gourmet","Garagem","Escada","Corredor"];
+
+  /* ---------- utilidades ---------- */
+  function n(v){ v = parseFloat(String(v).replace(",", ".")); return isFinite(v) && v > 0 ? v : 0; }
+  function brl(v){ return "R$ " + v.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+  function num(v,c){ return v.toFixed(c===undefined?2:c).replace(".", ","); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstElementChild; }
+  function tipoDe(amb){
+    if(amb.tipo === "parede") return "parede";
+    var a = areaDe(amb);
+    if(a > 10) return "aberta";
+    if(a >= 5) return "media";
+    return "pequena";
+  }
+  function areaDe(amb){
+    if(amb.modo === "area") return n(amb.area);
+    var t = 0;
+    for(var i=0;i<amb.medidas.length;i++) t += n(amb.medidas[i].c) * n(amb.medidas[i].l);
+    return Math.round(t * 100) / 100;
+  }
+  function precoM2(amb){
+    var p = PECAS.filter(function(x){return x.id===amb.peca})[0] || PECAS[3];
+    var g = PAGS.filter(function(x){return x.id===amb.pag})[0] || PAGS[0];
+    return Math.round((BASE[tipoDe(amb)] * p.fator + g.add) * 100) / 100;
+  }
+
+  /* ícones de paginação */
+  function icone(tipo){
+    var s = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">';
+    var i, j;
+    if(tipo === "reta"){
+      for(i=0;i<3;i++) for(j=0;j<3;j++)
+        s += '<rect data-t x="'+(1+j*7.6)+'" y="'+(1+i*7.6)+'" width="6.6" height="6.6" rx="1"/>';
+    } else if(tipo === "amarra"){
+      for(i=0;i<3;i++){
+        var off = i%2 ? -3.8 : 0;
+        for(j=-1;j<3;j++)
+          s += '<rect data-t x="'+(1+j*7.6+off)+'" y="'+(1+i*7.6)+'" width="6.6" height="6.6" rx="1"/>';
+      }
+      s += '<rect x="0" y="0" width="24" height="24" fill="none"/>';
+    } else if(tipo === "diagonal"){
+      s += '<g transform="rotate(45 12 12)">';
+      for(i=-1;i<4;i++) for(j=-1;j<4;j++)
+        s += '<rect data-t x="'+(1+j*7.6)+'" y="'+(1+i*7.6)+'" width="6.6" height="6.6" rx="1"/>';
+      s += '</g>';
+    } else {
+      for(i=0;i<3;i++){
+        s += '<rect data-t x="'+(2+i*7.3)+'" y="2" width="5.4" height="10" rx="1" transform="rotate(45 '+(4.7+i*7.3)+' 7)"/>';
+        s += '<rect data-t x="'+(2+i*7.3)+'" y="12" width="5.4" height="10" rx="1" transform="rotate(-45 '+(4.7+i*7.3)+' 17)"/>';
+      }
+    }
+    return s + '</svg>';
+  }
+
+  /* ---------- estado ---------- */
+  var CHAVE = "ficha-sil-v1";
+  var state = {cliente:{nome:"",obra:"",tel:"",data:""}, ambientes:[], extras:{}, obs:""};
+  var seq = 0, ultimaPeca = "80";
+  var lista = document.getElementById("lista");
+
+  function salvar(){
+    try{
+      var slim = {cliente:state.cliente, obs:state.obs, extras:state.extras,
+        ambientes:state.ambientes.map(function(a){
+          return {nome:a.nome,tipo:a.tipo,modo:a.modo,medidas:a.medidas,area:a.area,peca:a.peca,pag:a.pag};
+        })};
+      localStorage.setItem(CHAVE, JSON.stringify(slim));
+    }catch(e){}
+  }
+  function carregar(){
+    try{
+      var raw = localStorage.getItem(CHAVE);
+      if(!raw) return null;
+      var d = JSON.parse(raw);
+      return d && d.ambientes ? d : null;
+    }catch(e){ return null; }
+  }
+
+  /* ---------- cartão de ambiente ---------- */
+  function novoAmbiente(dados){
+    var a = dados || {nome:"",tipo:"piso",modo:"medidas",medidas:[{c:"",l:""}],area:"",peca:ultimaPeca,pag:"reta"};
+    a.id = ++seq;
+    if(!a.medidas || !a.medidas.length) a.medidas = [{c:"",l:""}];
+    state.ambientes.push(a);
+    montarCartao(a);
+    recalcular();
+    return a;
+  }
+
+  function montarCartao(a){
+    var p = "amb" + a.id;
+    var card = el(
+      '<article class="amb">' +
+        '<div class="amb-head">' +
+          '<span class="tag" data-tag>Ambiente</span>' +
+          '<button class="icon-btn" type="button" data-del>Apagar</button>' +
+        '</div>' +
+        '<div class="amb-body">' +
+          '<label class="field"><span class="lab">Nome do ambiente</span>' +
+            '<input type="text" id="'+p+'-nome" autocomplete="off" placeholder="Ex.: Sala principal"></label>' +
+          '<div class="chips" data-sug></div>' +
+          '<div><span class="lab" style="display:block;margin-bottom:6px">É piso ou parede?</span>' +
+            '<div class="big2" data-tipo>' +
+              '<button class="chip" type="button" data-v="piso" aria-pressed="false">Piso</button>' +
+              '<button class="chip" type="button" data-v="parede" aria-pressed="false">Parede</button>' +
+            '</div></div>' +
+          '<div><span class="lab" style="display:block;margin-bottom:6px" data-medlab>Medidas em metros</span>' +
+            '<div data-medidas style="display:flex;flex-direction:column;gap:8px"></div>' +
+            '<div class="chips" style="margin-top:8px">' +
+              '<button class="chip ghost" type="button" data-addmed>+ Somar outra parte</button>' +
+              '<button class="chip ghost" type="button" data-modo>Já sei a área em m²</button>' +
+            '</div>' +
+            '<div data-areainput style="margin-top:8px"></div>' +
+          '</div>' +
+          '<div class="area-out"><span class="k">Área</span><span class="v" data-area>0,00 m²</span></div>' +
+          '<div><span class="lab" style="display:block;margin-bottom:6px">Tamanho da peça</span>' +
+            '<div class="chips" data-peca></div></div>' +
+          '<div><span class="lab" style="display:block;margin-bottom:6px">Como vai assentar</span>' +
+            '<div class="chips" data-pag></div></div>' +
+          '<p class="warn" data-warn style="display:none"></p>' +
+        '</div>' +
+      '</article>');
+
+    a.node = card;
+    var nome = card.querySelector("#"+p+"-nome");
+    nome.value = a.nome;
+    nome.addEventListener("input", function(){ a.nome = nome.value; recalcular(); });
+
+    // sugestões de nome
+    var sug = card.querySelector("[data-sug]");
+    SUGESTOES.forEach(function(s){
+      var b = el('<button class="chip ghost" type="button">'+esc(s)+'</button>');
+      b.addEventListener("click", function(){ nome.value = s; a.nome = s; nome.focus(); recalcular(); });
+      sug.appendChild(b);
+    });
+
+    // piso / parede
+    var tipoBtns = card.querySelectorAll("[data-tipo] .chip");
+    Array.prototype.forEach.call(tipoBtns, function(b){
+      b.addEventListener("click", function(){ a.tipo = b.dataset.v; recalcular(); });
+    });
+
+    // medidas
+    var medBox = card.querySelector("[data-medidas]");
+    function linhaMedida(m, i){
+      var row = el('<div class="medida-row">' +
+        '<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="'+(a.tipo==="parede"?"largura":"comprimento")+'" value="'+(m.c||"")+'">' +
+        '<span class="times" aria-hidden="true">×</span>' +
+        '<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="'+(a.tipo==="parede"?"altura":"largura")+'" value="'+(m.l||"")+'">' +
+        (i > 0 ? '<button class="icon-btn" type="button" aria-label="Apagar esta medida">−</button>' : '') +
+      '</div>');
+      var ins = row.querySelectorAll("input");
+      ins[0].addEventListener("input", function(){ m.c = ins[0].value; recalcular(); });
+      ins[1].addEventListener("input", function(){ m.l = ins[1].value; recalcular(); });
+      var del = row.querySelector("button");
+      if(del) del.addEventListener("click", function(){
+        a.medidas.splice(a.medidas.indexOf(m), 1); desenharMedidas(); recalcular();
+      });
+      return row;
+    }
+    function desenharMedidas(){
+      medBox.innerHTML = "";
+      a.medidas.forEach(function(m,i){ medBox.appendChild(linhaMedida(m,i)); });
+    }
+    desenharMedidas();
+    a.redesenhaMedidas = desenharMedidas;
+
+    card.querySelector("[data-addmed]").addEventListener("click", function(){
+      a.medidas.push({c:"",l:""}); desenharMedidas();
+      var ins = medBox.querySelectorAll("input"); ins[ins.length-2].focus();
+      recalcular();
+    });
+
+    // modo área direta
+    var areaBox = card.querySelector("[data-areainput]");
+    var modoBtn = card.querySelector("[data-modo]");
+    function desenharModo(){
+      var porMedida = a.modo !== "area";
+      medBox.style.display = porMedida ? "" : "none";
+      card.querySelector("[data-addmed]").style.display = porMedida ? "" : "none";
+      modoBtn.textContent = porMedida ? "Já sei a área em m²" : "Voltar para medidas";
+      areaBox.innerHTML = "";
+      if(!porMedida){
+        var inp = el('<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="área em m²" value="'+(a.area||"")+'">');
+        inp.addEventListener("input", function(){ a.area = inp.value; recalcular(); });
+        areaBox.appendChild(inp);
+      }
+    }
+    modoBtn.addEventListener("click", function(){
+      a.modo = a.modo === "area" ? "medidas" : "area"; desenharModo(); recalcular();
+    });
+    desenharModo();
+    a.redesenhaModo = desenharModo;
+
+    // peça
+    var pecaBox = card.querySelector("[data-peca]");
+    PECAS.forEach(function(pc){
+      var b = el('<button class="chip" type="button" data-v="'+pc.id+'" aria-pressed="false">'+esc(pc.rot)+'</button>');
+      b.addEventListener("click", function(){ a.peca = pc.id; ultimaPeca = pc.id; recalcular(); });
+      pecaBox.appendChild(b);
+    });
+
+    // paginação
+    var pagBox = card.querySelector("[data-pag]");
+    PAGS.forEach(function(pg){
+      var b = el('<button class="chip" type="button" data-v="'+pg.id+'" aria-pressed="false">'+icone(pg.icone)+esc(pg.rot)+'</button>');
+      b.addEventListener("click", function(){ a.pag = pg.id; recalcular(); });
+      pagBox.appendChild(b);
+    });
+
+    card.querySelector("[data-del]").addEventListener("click", function(){
+      state.ambientes.splice(state.ambientes.indexOf(a), 1);
+      card.remove(); recalcular();
+    });
+
+    lista.appendChild(card);
+  }
+
+  function pintarCartao(a, indice){
+    var c = a.node;
+    c.querySelector("[data-tag]").textContent = "Ambiente " + indice + (a.nome ? " · " + a.nome : "");
+    Array.prototype.forEach.call(c.querySelectorAll("[data-tipo] .chip"), function(b){
+      b.setAttribute("aria-pressed", String(b.dataset.v === a.tipo));
+    });
+    Array.prototype.forEach.call(c.querySelectorAll("[data-peca] .chip"), function(b){
+      b.setAttribute("aria-pressed", String(b.dataset.v === a.peca));
+    });
+    Array.prototype.forEach.call(c.querySelectorAll("[data-pag] .chip"), function(b){
+      b.setAttribute("aria-pressed", String(b.dataset.v === a.pag));
+    });
+    c.querySelector("[data-medlab]").textContent = a.tipo === "parede"
+      ? "Medidas em metros — largura × altura" : "Medidas em metros — comprimento × largura";
+    Array.prototype.forEach.call(c.querySelectorAll("[data-medidas] .medida-row"), function(row){
+      var ins = row.querySelectorAll("input");
+      ins[0].placeholder = a.tipo === "parede" ? "largura" : "comprimento";
+      ins[1].placeholder = a.tipo === "parede" ? "altura" : "largura";
+    });
+
+    var area = areaDe(a);
+    c.querySelector("[data-area]").textContent = num(area) + " m²";
+
+    var w = c.querySelector("[data-warn]");
+    var aviso = "";
+    if(a.peca === "90") aviso = "Peça maior que 80x80: o Bruno precisa olhar antes de fechar o preço.";
+    else if(area > 0 && a.tipo === "piso") aviso = "Entra como " + NOME_TIPO[tipoDe(a)].toLowerCase() + ".";
+    if(aviso){ w.textContent = aviso; w.style.display = ""; } else { w.style.display = "none"; }
+  }
+
+  /* ---------- extras ---------- */
+  var extrasBox = document.getElementById("extras");
+  EXTRAS.forEach(function(x){
+    var row = el('<div class="extra">' +
+      '<span class="nome">' + esc(x.rot) + '<span class="un">' + x.un + ' · ' + brl(x.preco) + ' por ' + x.un + '</span></span>' +
+      '<input type="number" inputmode="decimal" step="0.01" min="0" id="ex-'+x.id+'" placeholder="0" aria-label="'+esc(x.rot)+'">' +
+    '</div>');
+    var inp = row.querySelector("input");
+    inp.addEventListener("input", function(){ state.extras[x.id] = inp.value; recalcular(); });
+    x.input = inp;
+    extrasBox.appendChild(row);
+  });
+
+  /* ---------- cálculo + texto ---------- */
+  var cli = {
+    nome: document.getElementById("cli-nome"),
+    obra: document.getElementById("cli-obra"),
+    tel:  document.getElementById("cli-tel"),
+    data: document.getElementById("cli-data")
+  };
+  Object.keys(cli).forEach(function(k){
+    cli[k].addEventListener("input", function(){ state.cliente[k] = cli[k].value; recalcular(); });
+  });
+  var obsEl = document.getElementById("obs");
+  obsEl.addEventListener("input", function(){ state.obs = obsEl.value; recalcular(); });
+
+  var elTotal = document.getElementById("t-total"),
+      elSub   = document.getElementById("t-sub"),
+      elLin   = document.getElementById("t-linhas"),
+      elErro  = document.getElementById("erro"),
+      elSaida = document.getElementById("saida"),
+      elWa    = document.getElementById("wa");
+
+  function dataBR(v){
+    if(!v) return "";
+    var p = v.split("-");
+    return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : v;
+  }
+
+  function recalcular(){
+    var areaTotal = 0, moTotal = 0, dias = 0, validos = [], visita = false;
+
+    state.ambientes.forEach(function(a, i){
+      pintarCartao(a, i + 1);
+      var area = areaDe(a);
+      if(!a.nome || area <= 0) return;
+      var pm = precoM2(a);
+      var tot = Math.round(area * pm * 100) / 100;
+      areaTotal += area; moTotal += tot;
+      dias += area / PROD[tipoDe(a)];
+      if(a.peca === "90") visita = true;
+      validos.push({a:a, area:area, pm:pm, tot:tot});
+    });
+
+    var extrasTotal = 0, extrasLista = [];
+    EXTRAS.forEach(function(x){
+      var q = n(state.extras[x.id]);
+      if(q <= 0) return;
+      var t = Math.round(q * x.preco * 100) / 100;
+      extrasTotal += t;
+      extrasLista.push({x:x, q:q, t:t});
+    });
+
+    moTotal = Math.round(moTotal * 100) / 100;
+    extrasTotal = Math.round(extrasTotal * 100) / 100;
+    var subtotal = Math.round((moTotal + extrasTotal) * 100) / 100;
+    var final = Math.max(subtotal, validos.length ? MINIMO : 0);
+    var diasCheios = dias > 0 ? Math.ceil(dias) : 0;
+
+    elTotal.textContent = brl(final);
+    elSub.textContent = validos.length
+      ? num(areaTotal) + " m² · " + diasCheios + (diasCheios === 1 ? " dia de obra" : " dias de obra")
+      : "Nenhum ambiente preenchido ainda";
+    elLin.innerHTML = validos.length
+      ? '<div><span>Assentamento</span><span>' + brl(moTotal) + '</span></div>' +
+        (extrasTotal ? '<div><span>Serviços extras</span><span>' + brl(extrasTotal) + '</span></div>' : "") +
+        (final > subtotal ? '<div><span>Mínimo por serviço</span><span>' + brl(MINIMO) + '</span></div>' : "")
+      : "";
+
+    // texto
+    var L = [];
+    L.push("*ORÇAMENTO — REVESTIMENTOS SIL*");
+    L.push("Cliente: " + (state.cliente.nome || "—"));
+    L.push("Obra: " + (state.cliente.obra || "—"));
+    L.push("Contato: " + (state.cliente.tel || "—"));
+    L.push("Data: " + (dataBR(state.cliente.data) || "—"));
+    L.push("");
+    L.push("*AMBIENTES*");
+    validos.forEach(function(v, i){
+      var pc = PECAS.filter(function(p){return p.id === v.a.peca})[0];
+      var pg = PAGS.filter(function(p){return p.id === v.a.pag})[0];
+      L.push((i + 1) + ") " + v.a.nome +
+        " | " + (v.a.tipo === "parede" ? "PAREDE" : "PISO") +
+        " | " + NOME_TIPO[tipoDe(v.a)] +
+        " | peça " + pc.rot +
+        " | " + pg.rot +
+        " | " + num(v.area) + " m²" +
+        " | " + brl(v.pm) + "/m² = " + brl(v.tot));
+    });
+    if(!validos.length) L.push("(nenhum ambiente preenchido)");
+    L.push("Área total: " + num(areaTotal) + " m²");
+    if(extrasLista.length){
+      L.push("");
+      L.push("*SERVIÇOS EXTRAS*");
+      extrasLista.forEach(function(e){
+        L.push("- " + e.x.rot + ": " + num(e.q) + " " + e.x.un + " = " + brl(e.t));
+      });
+    }
+    L.push("");
+    L.push("*RESUMO*");
+    L.push("Assentamento: " + brl(moTotal));
+    if(extrasTotal) L.push("Extras: " + brl(extrasTotal));
+    L.push("TOTAL: " + brl(final));
+    L.push("Prazo estimado: " + diasCheios + (diasCheios === 1 ? " dia" : " dias"));
+    if(visita) L.push("ATENÇÃO: tem peça maior que 80x80 — precisa avaliar antes de fechar.");
+    if(state.obs.trim()){ L.push(""); L.push("*OBSERVAÇÃO*"); L.push(state.obs.trim()); }
+    L.push("");
+    L.push("Valores de mão de obra. Material por conta do cliente.");
+
+    var texto = L.join("\n");
+    elSaida.value = texto;
+    elWa.href = "https://wa.me/?text=" + encodeURIComponent(texto);
+
+    var faltas = [];
+    if(!state.cliente.nome.trim()) faltas.push("o nome do cliente");
+    if(!validos.length) faltas.push("pelo menos um ambiente com nome e medida");
+    var incompleto = state.ambientes.filter(function(a){ return (a.nome && areaDe(a) <= 0) || (!a.nome && areaDe(a) > 0); }).length;
+    if(incompleto) faltas.push("o nome ou a medida de " + incompleto + " ambiente(s)");
+
+    if(faltas.length){
+      elErro.textContent = "Falta preencher: " + faltas.join(", ") + ".";
+      elWa.setAttribute("aria-disabled", "true");
+    } else {
+      elErro.textContent = "";
+      elWa.removeAttribute("aria-disabled");
+    }
+
+    salvar();
+  }
+
+  /* ---------- botões gerais ---------- */
+  document.getElementById("add-amb").addEventListener("click", function(){
+    var a = novoAmbiente();
+    a.node.scrollIntoView({behavior:"smooth", block:"center"});
+    a.node.querySelector("input").focus();
+  });
+
+  document.getElementById("copiar").addEventListener("click", function(){
+    var b = this;
+    elSaida.removeAttribute("readonly");
+    elSaida.select(); elSaida.setSelectionRange(0, 99999);
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){}
+    elSaida.setAttribute("readonly", "readonly");
+    if(!ok && navigator.clipboard){
+      navigator.clipboard.writeText(elSaida.value).then(function(){ b.textContent = "Copiado!"; }, function(){});
+    }
+    b.textContent = ok ? "Copiado!" : "Selecione o texto abaixo e copie";
+    setTimeout(function(){ b.textContent = "Copiar o texto"; }, 2500);
+  });
+
+  document.getElementById("imprimir").addEventListener("click", function(){
+    try{ window.print(); }catch(e){}
+  });
+
+  document.getElementById("limpar").addEventListener("click", function(){
+    if(!window.confirm("Apagar tudo e começar uma ficha nova?")) return;
+    try{ localStorage.removeItem(CHAVE); }catch(e){}
+    state = {cliente:{nome:"",obra:"",tel:"",data:""}, ambientes:[], extras:{}, obs:""};
+    lista.innerHTML = "";
+    Object.keys(cli).forEach(function(k){ cli[k].value = ""; });
+    EXTRAS.forEach(function(x){ x.input.value = ""; });
+    obsEl.value = "";
+    hoje();
+    novoAmbiente();
+  });
+
+  function hoje(){
+    var d = new Date();
+    var v = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+    cli.data.value = v; state.cliente.data = v;
+  }
+
+  /* ---------- partida ---------- */
+  function iniciar(){
+    var salvo = carregar();
+    if(salvo){
+      state.cliente = salvo.cliente || state.cliente;
+      state.extras  = salvo.extras  || {};
+      state.obs     = salvo.obs     || "";
+      Object.keys(cli).forEach(function(k){ cli[k].value = state.cliente[k] || ""; });
+      EXTRAS.forEach(function(x){ x.input.value = state.extras[x.id] || ""; });
+      obsEl.value = state.obs;
+      (salvo.ambientes || []).forEach(function(a){ novoAmbiente(a); });
+    }
+    if(!state.cliente.data) hoje();
+    if(!state.ambientes.length) novoAmbiente();
+    recalcular();
+  }
+
+  iniciar();
+})();
+</script>

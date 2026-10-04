@@ -126,7 +126,7 @@
   }
   input[type=number]{font-variant-numeric:tabular-nums}
   textarea{min-height:80px;resize:vertical}
-  input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
+  input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{
     outline:3px solid var(--flag);outline-offset:2px;
   }
 
@@ -143,11 +143,9 @@
     background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600;
   }
   .chip[aria-pressed="true"] svg [data-t]{fill:var(--accent-ink)}
-  .chip[aria-pressed="true"] svg [data-b]{stroke:var(--accent-ink);opacity:.5}
   .chip.ghost{border-style:dashed;color:var(--muted);font-size:14px;min-height:42px}
   .chip svg{flex:0 0 22px}
   .chip svg [data-t]{fill:var(--ink)}
-  .chip svg [data-b]{stroke:var(--surface);stroke-width:1.4;opacity:.55}
 
   .big2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .big2 .chip{justify-content:center;min-height:56px;font-size:17px}
@@ -184,10 +182,21 @@
   }
   .area-out .k{font-family:Archivo,sans-serif;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
   .area-out .v{font-family:Archivo,sans-serif;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+  .conta{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:8px;
+    padding:10px 14px;font-size:14px;color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .conta strong{color:var(--ink);font-size:16px;font-family:Archivo,sans-serif}
   .hint{font-size:14px;color:var(--muted);margin:0}
   .warn{
     font-size:14px;background:var(--flag-soft);color:var(--flag);
     border-left:4px solid var(--flag);border-radius:0 6px 6px 0;padding:9px 12px;margin:0;
+  }
+  .peca-outro{
+    display:flex;flex-direction:column;gap:10px;
+    background:var(--surface);border:1.5px dashed var(--line-strong);
+    border-radius:8px;padding:12px;
   }
 
   /* ---------- extras ---------- */
@@ -199,6 +208,28 @@
   .extra .nome{font-size:16px;line-height:1.25}
   .extra .un{display:block;font-size:13px;color:var(--muted)}
   .extra input{min-height:46px;padding:8px;text-align:center}
+
+  /* ---------- tabela de preços ---------- */
+  .tabela{display:flex;flex-direction:column;gap:22px;padding-top:4px}
+  .grupo h3{
+    font-family:Archivo,sans-serif;font-weight:600;font-size:15px;margin:0 0 4px;
+  }
+  .grupo p.sobre{font-size:14px;color:var(--muted);margin:0 0 10px}
+  .preco-row{
+    display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--line);
+  }
+  .preco-row:last-child{border-bottom:0}
+  .preco-row .rot{font-size:15px;line-height:1.3}
+  .preco-row .calc{display:block;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .preco-row input{min-height:46px;padding:8px;text-align:center}
+  .preco-row .dupla{display:flex;gap:6px;align-items:center}
+  .novo-serv{
+    display:flex;flex-direction:column;gap:10px;
+    background:var(--surface-2);border:1.5px dashed var(--line-strong);
+    border-radius:8px;padding:12px;margin-top:10px;
+  }
+  .novo-serv .linha{display:grid;grid-template-columns:1fr 110px;gap:8px}
 
   /* ---------- resumo ---------- */
   .tot{
@@ -219,6 +250,7 @@
     cursor:pointer;text-decoration:none;
   }
   .btn.sec{background:var(--surface);color:var(--accent)}
+  .btn.peq{min-height:48px;font-size:16px}
   .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
   .erro{color:var(--danger);font-size:15px;margin:0}
 
@@ -236,7 +268,7 @@
     .chip{padding:10px 11px;font-size:14px}
     .big2 .chip{font-size:16px}
     .medida-row input{padding:10px 6px}
-    .extra{grid-template-columns:1fr 88px}
+    .extra,.preco-row{grid-template-columns:1fr 88px}
     .area-out .v{font-size:22px}
     .tot .v{font-size:30px}
   }
@@ -306,6 +338,7 @@
       <div class="step-body">
         <p class="hint">Só preencha o que for fazer. Deixe em branco o resto.</p>
         <div id="extras"></div>
+        <p class="hint">Faltou um serviço na lista? Crie em <strong>Tabela de preços</strong>, no passo 5.</p>
       </div>
     </section>
 
@@ -336,8 +369,67 @@
         <details>
           <summary>Outras opções</summary>
           <div style="display:flex;flex-direction:column;gap:10px;padding-top:8px">
-            <button class="btn sec" id="imprimir" type="button">Imprimir ficha em branco (papel)</button>
-            <button class="btn sec" id="limpar" type="button" style="border-color:var(--line-strong);color:var(--muted)">Começar uma ficha nova</button>
+            <button class="btn sec peq" id="imprimir" type="button">Imprimir ficha em branco (papel)</button>
+            <button class="btn sec peq" id="limpar" type="button" style="border-color:var(--line-strong);color:var(--muted)">Começar uma ficha nova</button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 5 TABELA DE PREÇOS -->
+    <section class="step">
+      <h2><span class="num">5</span> Tabela de preços</h2>
+      <div class="step-body">
+        <p class="hint">
+          Estes são os valores que a ficha usa para calcular. Dá para consultar e mudar
+          quando a obra pedir. Fica salvo só neste celular e vale para as próximas fichas.
+        </p>
+        <p class="warn" id="aviso-tabela" style="display:none"></p>
+        <details id="det-tabela">
+          <summary>Abrir a tabela de preços</summary>
+          <div class="tabela">
+
+            <div class="grupo">
+              <h3>1. Preço base da mão de obra</h3>
+              <p class="sobre">Por m², considerando peça 60x60 e base pronta. O tipo é escolhido sozinho pela área do ambiente.</p>
+              <div id="tab-base"></div>
+            </div>
+
+            <div class="grupo">
+              <h3>2. Multiplicador do tamanho da peça</h3>
+              <p class="sobre">Multiplica o preço base. 60x60 é a referência, por isso vale 1. Peça maior dá mais trabalho, então o número sobe.</p>
+              <div id="tab-peca"></div>
+            </div>
+
+            <div class="grupo">
+              <h3>3. Adicional da paginação</h3>
+              <p class="sobre">Soma direto no preço do m², depois da multiplicação.</p>
+              <div id="tab-pag"></div>
+            </div>
+
+            <div class="grupo">
+              <h3>4. Serviços extras</h3>
+              <p class="sobre">Preço por unidade. Dá para mudar qualquer um e criar serviço novo.</p>
+              <div id="tab-extras"></div>
+              <div class="novo-serv">
+                <span class="lab">Criar um serviço que não está na lista</span>
+                <input type="text" id="ns-nome" placeholder="Nome do serviço. Ex.: Nicho de box" autocomplete="off">
+                <div class="chips" id="ns-un"></div>
+                <div class="linha">
+                  <span class="hint" style="align-self:center">Preço por unidade</span>
+                  <input type="number" inputmode="decimal" step="0.01" min="0" id="ns-preco" placeholder="R$">
+                </div>
+                <button class="btn sec peq" id="ns-add" type="button">Adicionar serviço</button>
+              </div>
+            </div>
+
+            <div class="grupo">
+              <h3>5. Outros ajustes</h3>
+              <div id="tab-geral"></div>
+            </div>
+
+            <button class="btn sec peq" id="reset-precos" type="button"
+              style="border-color:var(--line-strong);color:var(--muted)">Voltar para os preços originais</button>
           </div>
         </details>
       </div>
@@ -382,7 +474,7 @@
       <tr><td>Retirada de piso antigo (m²)</td><td style="width:18%"></td><td>Soleira / peitoril (un)</td><td style="width:18%"></td></tr>
       <tr><td>Contrapiso / regularização (m²)</td><td></td><td>Rejunte epóxi (m²)</td><td></td></tr>
       <tr><td>Autonivelante (m²)</td><td></td><td>Recorte especial / furo (un)</td><td></td></tr>
-      <tr><td>Rodapé (metros)</td><td></td><td>Impermeabilização de box (m²)</td><td></td></tr>
+      <tr><td>Rodapé (metros)</td><td></td><td>Outro: ____________________</td><td></td></tr>
     </table>
     <table>
       <tr><th>Observações</th></tr>
@@ -390,7 +482,7 @@
     </table>
     <p class="leg">
       <strong>Piso ou parede:</strong> escreva PISO ou PAREDE. &nbsp;·&nbsp;
-      <strong>Peça:</strong> 45x45 · 60x60 · 70x70 · 80x80 · maior que 80x80. &nbsp;·&nbsp;
+      <strong>Peça:</strong> 45x45 · 60x60 · 70x70 · 80x80 · outro (anotar a medida). &nbsp;·&nbsp;
       <strong>Paginação:</strong> reta · amarração · diagonal · espinha de peixe.<br>
       Medidas em metros, comprimento × largura (parede: largura × altura). Depois é só tirar a foto da ficha e mandar.
     </p>
@@ -401,47 +493,68 @@
 (function(){
   "use strict";
 
-  /* ---------- tabela de preços (espelha a planilha) ---------- */
-  var BASE = {aberta:50, media:70, pequena:90, parede:70};
-  var PROD = {aberta:12, media:9, pequena:6, parede:7};     // m² por dia
-  var NOME_TIPO = {
-    aberta:"Área aberta acima de 10 m²",
-    media:"Área média de 5 a 10 m²",
-    pequena:"Área pequena até 5 m²",
-    parede:"Parede / revestimento vertical"
+  /* ================= tabela de preços ================= */
+  var PADRAO = {
+    base:  {aberta:50, media:70, pequena:90, parede:70},
+    fator: {p45:0.85, p60:1, p70:1.08, p80:1.15},
+    pag:   {reta:0, amarra:8, diagonal:25, espinha:35},
+    prod:  {aberta:12, media:9, pequena:6, parede:7},
+    minimo:900,
+    extras:[
+      {id:"retirada",  rot:"Retirada de piso antigo",   un:"m²", preco:20},
+      {id:"contrapiso",rot:"Contrapiso / regularização",un:"m²", preco:55},
+      {id:"nivel",     rot:"Nivelamento autonivelante", un:"m²", preco:70},
+      {id:"rodape",    rot:"Assentamento de rodapé",    un:"m",  preco:20},
+      {id:"soleira",   rot:"Soleira / peitoril",        un:"un", preco:90},
+      {id:"epoxi",     rot:"Rejunte epóxi (adicional)", un:"m²", preco:35},
+      {id:"recorte",   rot:"Recorte especial / furo",   un:"un", preco:25},
+      {id:"box",       rot:"Impermeabilização de box",  un:"m²", preco:65}
+    ]
   };
+
+  var TIPOS = [
+    {id:"aberta",  rot:"Área aberta acima de 10 m²", nota:"Sala, quarto, garagem"},
+    {id:"media",   rot:"Área média de 5 a 10 m²",    nota:"Cozinha, suíte, varanda"},
+    {id:"pequena", rot:"Área pequena até 5 m²",      nota:"Banheiro, lavabo"},
+    {id:"parede",  rot:"Parede / revestimento",      nota:"Box, cozinha, área molhada"}
+  ];
   var PECAS = [
-    {id:"45", rot:"Até 45x45", fator:0.85},
-    {id:"60", rot:"60x60",     fator:1},
-    {id:"70", rot:"70x70",     fator:1.08},
-    {id:"80", rot:"80x80",     fator:1.15},
-    {id:"90", rot:"Maior que 80x80", fator:1.45, visita:true}
+    {id:"p45", rot:"Até 45x45"},
+    {id:"p60", rot:"60x60"},
+    {id:"p70", rot:"70x70"},
+    {id:"p80", rot:"80x80"},
+    {id:"outro", rot:"Outro tamanho", livre:true}
   ];
   var PAGS = [
-    {id:"reta",     rot:"Reta",            add:0,  icone:"reta"},
-    {id:"amarra",   rot:"Amarração",       add:8,  icone:"amarra"},
-    {id:"diagonal", rot:"Diagonal",        add:25, icone:"diagonal"},
-    {id:"espinha",  rot:"Espinha de peixe",add:35, icone:"espinha"}
+    {id:"reta",     rot:"Reta",             icone:"reta"},
+    {id:"amarra",   rot:"Amarração",        icone:"amarra"},
+    {id:"diagonal", rot:"Diagonal",         icone:"diagonal"},
+    {id:"espinha",  rot:"Espinha de peixe", icone:"espinha"}
   ];
-  var EXTRAS = [
-    {id:"retirada",  rot:"Retirada de piso antigo",   un:"m²", preco:20},
-    {id:"contrapiso",rot:"Contrapiso / regularização",un:"m²", preco:55},
-    {id:"nivel",     rot:"Nivelamento autonivelante", un:"m²", preco:70},
-    {id:"rodape",    rot:"Assentamento de rodapé",    un:"m",  preco:20},
-    {id:"soleira",   rot:"Soleira / peitoril",        un:"un", preco:90},
-    {id:"epoxi",     rot:"Rejunte epóxi (adicional)", un:"m²", preco:35},
-    {id:"recorte",   rot:"Recorte especial / furo",   un:"un", preco:25},
-    {id:"box",       rot:"Impermeabilização de box",  un:"m²", preco:65}
-  ];
-  var MINIMO = 900;
+  var UNIDADES = ["m²","m","un"];
   var SUGESTOES = ["Sala","Quarto","Cozinha","Banheiro","Lavanderia","Varanda","Área gourmet","Garagem","Escada","Corredor"];
 
-  /* ---------- utilidades ---------- */
+  var CHAVE = "ficha-sil-v1";
+  var CHAVE_PRECOS = "ficha-sil-precos-v1";
+
+  function clonar(o){ return JSON.parse(JSON.stringify(o)); }
+  var precos = clonar(PADRAO);
+
+  /* ================= utilidades ================= */
   function n(v){ v = parseFloat(String(v).replace(",", ".")); return isFinite(v) && v > 0 ? v : 0; }
   function brl(v){ return "R$ " + v.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
   function num(v,c){ return v.toFixed(c===undefined?2:c).replace(".", ","); }
-  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstElementChild; }
+  function rotTipo(id){ for(var i=0;i<TIPOS.length;i++) if(TIPOS[i].id===id) return TIPOS[i].rot; return id; }
+  function rotPeca(a){
+    if(a.peca === "outro") return a.pecaNome ? a.pecaNome : "outro tamanho";
+    for(var i=0;i<PECAS.length;i++) if(PECAS[i].id===a.peca) return PECAS[i].rot;
+    return a.peca;
+  }
+  function rotPag(id){ for(var i=0;i<PAGS.length;i++) if(PAGS[i].id===id) return PAGS[i].rot; return id; }
+  function acharExtra(id){ for(var i=0;i<precos.extras.length;i++) if(precos.extras[i].id===id) return precos.extras[i]; return null; }
+
   function tipoDe(amb){
     if(amb.tipo === "parede") return "parede";
     var a = areaDe(amb);
@@ -455,16 +568,21 @@
     for(var i=0;i<amb.medidas.length;i++) t += n(amb.medidas[i].c) * n(amb.medidas[i].l);
     return Math.round(t * 100) / 100;
   }
-  function precoM2(amb){
-    var p = PECAS.filter(function(x){return x.id===amb.peca})[0] || PECAS[3];
-    var g = PAGS.filter(function(x){return x.id===amb.pag})[0] || PAGS[0];
-    return Math.round((BASE[tipoDe(amb)] * p.fator + g.add) * 100) / 100;
+  function partes(amb){
+    var add = precos.pag[amb.pag] || 0;
+    if(amb.peca === "outro"){
+      var p = n(amb.pecaPreco);
+      return {base:p, fator:null, add:add, total:Math.round((p + add) * 100) / 100};
+    }
+    var b = precos.base[tipoDe(amb)] || 0;
+    var f = precos.fator[amb.peca] || 1;
+    return {base:b, fator:f, add:add, total:Math.round((b * f + add) * 100) / 100};
   }
+  function precoM2(amb){ return partes(amb).total; }
 
   /* ícones de paginação */
   function icone(tipo){
-    var s = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">';
-    var i, j;
+    var s = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">', i, j;
     if(tipo === "reta"){
       for(i=0;i<3;i++) for(j=0;j<3;j++)
         s += '<rect data-t x="'+(1+j*7.6)+'" y="'+(1+i*7.6)+'" width="6.6" height="6.6" rx="1"/>';
@@ -474,7 +592,6 @@
         for(j=-1;j<3;j++)
           s += '<rect data-t x="'+(1+j*7.6+off)+'" y="'+(1+i*7.6)+'" width="6.6" height="6.6" rx="1"/>';
       }
-      s += '<rect x="0" y="0" width="24" height="24" fill="none"/>';
     } else if(tipo === "diagonal"){
       s += '<g transform="rotate(45 12 12)">';
       for(i=-1;i<4;i++) for(j=-1;j<4;j++)
@@ -489,33 +606,47 @@
     return s + '</svg>';
   }
 
-  /* ---------- estado ---------- */
-  var CHAVE = "ficha-sil-v1";
+  /* ================= estado ================= */
   var state = {cliente:{nome:"",obra:"",tel:"",data:""}, ambientes:[], extras:{}, obs:""};
-  var seq = 0, ultimaPeca = "80";
+  var seq = 0, ultimaPeca = "p80", ultimoOutro = {nome:"", preco:""};
   var lista = document.getElementById("lista");
 
   function salvar(){
     try{
       var slim = {cliente:state.cliente, obs:state.obs, extras:state.extras,
         ambientes:state.ambientes.map(function(a){
-          return {nome:a.nome,tipo:a.tipo,modo:a.modo,medidas:a.medidas,area:a.area,peca:a.peca,pag:a.pag};
+          return {nome:a.nome,tipo:a.tipo,modo:a.modo,medidas:a.medidas,area:a.area,
+                  peca:a.peca,pecaNome:a.pecaNome,pecaPreco:a.pecaPreco,pag:a.pag};
         })};
       localStorage.setItem(CHAVE, JSON.stringify(slim));
     }catch(e){}
   }
-  function carregar(){
+  function salvarPrecos(){
+    try{ localStorage.setItem(CHAVE_PRECOS, JSON.stringify(precos)); }catch(e){}
+  }
+  function carregar(chave){
     try{
-      var raw = localStorage.getItem(CHAVE);
-      if(!raw) return null;
-      var d = JSON.parse(raw);
-      return d && d.ambientes ? d : null;
+      var raw = localStorage.getItem(chave);
+      return raw ? JSON.parse(raw) : null;
     }catch(e){ return null; }
   }
 
-  /* ---------- cartão de ambiente ---------- */
+  /* ================= cartão de ambiente ================= */
+  /* fichas salvas antes da tabela editável usavam outros códigos de peça */
+  var DE_PARA = {"45":"p45","60":"p60","70":"p70","80":"p80"};
+  function migrar(a){
+    if(DE_PARA[a.peca]) a.peca = DE_PARA[a.peca];
+    else if(a.peca === "90"){
+      a.peca = "outro";
+      if(!a.pecaNome) a.pecaNome = "Maior que 80x80";
+    }
+    if(!a.peca) a.peca = "p80";
+    return a;
+  }
+
   function novoAmbiente(dados){
-    var a = dados || {nome:"",tipo:"piso",modo:"medidas",medidas:[{c:"",l:""}],area:"",peca:ultimaPeca,pag:"reta"};
+    var a = dados ? migrar(dados) : {nome:"",tipo:"piso",modo:"medidas",medidas:[{c:"",l:""}],area:"",
+                      peca:ultimaPeca, pecaNome:ultimoOutro.nome, pecaPreco:ultimoOutro.preco, pag:"reta"};
     a.id = ++seq;
     if(!a.medidas || !a.medidas.length) a.medidas = [{c:"",l:""}];
     state.ambientes.push(a);
@@ -551,9 +682,17 @@
           '</div>' +
           '<div class="area-out"><span class="k">Área</span><span class="v" data-area>0,00 m²</span></div>' +
           '<div><span class="lab" style="display:block;margin-bottom:6px">Tamanho da peça</span>' +
-            '<div class="chips" data-peca></div></div>' +
+            '<div class="chips" data-peca></div>' +
+            '<div class="peca-outro" data-outro style="display:none;margin-top:10px">' +
+              '<label class="field"><span class="lab">Qual o tamanho da peça?</span>' +
+                '<input type="text" id="'+p+'-pn" autocomplete="off" placeholder="Ex.: 100x100, 120x60, 20x120"></label>' +
+              '<label class="field"><span class="lab">Preço da mão de obra por m²</span>' +
+                '<input type="number" inputmode="decimal" step="0.01" min="0" id="'+p+'-pp" placeholder="R$ por m²"></label>' +
+              '<p class="hint">Aqui você digita o preço cheio do m². A paginação ainda soma por cima.</p>' +
+            '</div></div>' +
           '<div><span class="lab" style="display:block;margin-bottom:6px">Como vai assentar</span>' +
             '<div class="chips" data-pag></div></div>' +
+          '<div class="conta" data-conta></div>' +
           '<p class="warn" data-warn style="display:none"></p>' +
         '</div>' +
       '</article>');
@@ -563,7 +702,6 @@
     nome.value = a.nome;
     nome.addEventListener("input", function(){ a.nome = nome.value; recalcular(); });
 
-    // sugestões de nome
     var sug = card.querySelector("[data-sug]");
     SUGESTOES.forEach(function(s){
       var b = el('<button class="chip ghost" type="button">'+esc(s)+'</button>');
@@ -571,19 +709,17 @@
       sug.appendChild(b);
     });
 
-    // piso / parede
-    var tipoBtns = card.querySelectorAll("[data-tipo] .chip");
-    Array.prototype.forEach.call(tipoBtns, function(b){
+    Array.prototype.forEach.call(card.querySelectorAll("[data-tipo] .chip"), function(b){
       b.addEventListener("click", function(){ a.tipo = b.dataset.v; recalcular(); });
     });
 
-    // medidas
+    /* medidas */
     var medBox = card.querySelector("[data-medidas]");
     function linhaMedida(m, i){
       var row = el('<div class="medida-row">' +
-        '<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="'+(a.tipo==="parede"?"largura":"comprimento")+'" value="'+(m.c||"")+'">' +
+        '<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="comprimento" value="'+esc(m.c||"")+'">' +
         '<span class="times" aria-hidden="true">×</span>' +
-        '<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="'+(a.tipo==="parede"?"altura":"largura")+'" value="'+(m.l||"")+'">' +
+        '<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="largura" value="'+esc(m.l||"")+'">' +
         (i > 0 ? '<button class="icon-btn" type="button" aria-label="Apagar esta medida">−</button>' : '') +
       '</div>');
       var ins = row.querySelectorAll("input");
@@ -600,7 +736,6 @@
       a.medidas.forEach(function(m,i){ medBox.appendChild(linhaMedida(m,i)); });
     }
     desenharMedidas();
-    a.redesenhaMedidas = desenharMedidas;
 
     card.querySelector("[data-addmed]").addEventListener("click", function(){
       a.medidas.push({c:"",l:""}); desenharMedidas();
@@ -608,7 +743,7 @@
       recalcular();
     });
 
-    // modo área direta
+    /* modo área direta */
     var areaBox = card.querySelector("[data-areainput]");
     var modoBtn = card.querySelector("[data-modo]");
     function desenharModo(){
@@ -618,7 +753,7 @@
       modoBtn.textContent = porMedida ? "Já sei a área em m²" : "Voltar para medidas";
       areaBox.innerHTML = "";
       if(!porMedida){
-        var inp = el('<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="área em m²" value="'+(a.area||"")+'">');
+        var inp = el('<input type="number" inputmode="decimal" step="0.01" min="0" placeholder="área em m²" value="'+esc(a.area||"")+'">');
         inp.addEventListener("input", function(){ a.area = inp.value; recalcular(); });
         areaBox.appendChild(inp);
       }
@@ -627,17 +762,26 @@
       a.modo = a.modo === "area" ? "medidas" : "area"; desenharModo(); recalcular();
     });
     desenharModo();
-    a.redesenhaModo = desenharModo;
 
-    // peça
+    /* peça */
     var pecaBox = card.querySelector("[data-peca]");
     PECAS.forEach(function(pc){
       var b = el('<button class="chip" type="button" data-v="'+pc.id+'" aria-pressed="false">'+esc(pc.rot)+'</button>');
-      b.addEventListener("click", function(){ a.peca = pc.id; ultimaPeca = pc.id; recalcular(); });
+      b.addEventListener("click", function(){
+        a.peca = pc.id;
+        if(pc.id !== "outro") ultimaPeca = pc.id;
+        recalcular();
+        if(pc.id === "outro") card.querySelector("#"+p+"-pn").focus();
+      });
       pecaBox.appendChild(b);
     });
+    var pn = card.querySelector("#"+p+"-pn"), pp = card.querySelector("#"+p+"-pp");
+    pn.value = a.pecaNome || "";
+    pp.value = a.pecaPreco || "";
+    pn.addEventListener("input", function(){ a.pecaNome = pn.value; ultimoOutro.nome = pn.value; recalcular(); });
+    pp.addEventListener("input", function(){ a.pecaPreco = pp.value; ultimoOutro.preco = pp.value; recalcular(); });
 
-    // paginação
+    /* paginação */
     var pagBox = card.querySelector("[data-pag]");
     PAGS.forEach(function(pg){
       var b = el('<button class="chip" type="button" data-v="'+pg.id+'" aria-pressed="false">'+icone(pg.icone)+esc(pg.rot)+'</button>');
@@ -665,6 +809,7 @@
     Array.prototype.forEach.call(c.querySelectorAll("[data-pag] .chip"), function(b){
       b.setAttribute("aria-pressed", String(b.dataset.v === a.pag));
     });
+    c.querySelector("[data-outro]").style.display = a.peca === "outro" ? "" : "none";
     c.querySelector("[data-medlab]").textContent = a.tipo === "parede"
       ? "Medidas em metros — largura × altura" : "Medidas em metros — comprimento × largura";
     Array.prototype.forEach.call(c.querySelectorAll("[data-medidas] .medida-row"), function(row){
@@ -676,27 +821,205 @@
     var area = areaDe(a);
     c.querySelector("[data-area]").textContent = num(area) + " m²";
 
+    /* a conta, aberta */
+    var pt = partes(a);
+    var txt;
+    if(a.peca === "outro"){
+      txt = brl(pt.base) + " (" + (a.pecaNome || "peça digitada") + ")" +
+            (pt.add ? " + " + brl(pt.add) + " (" + rotPag(a.pag).toLowerCase() + ")" : "");
+    } else {
+      txt = brl(pt.base) + " (" + rotTipo(tipoDe(a)).toLowerCase() + ")" +
+            " × " + num(pt.fator) + " (" + rotPeca(a) + ")" +
+            (pt.add ? " + " + brl(pt.add) + " (" + rotPag(a.pag).toLowerCase() + ")" : "");
+    }
+    c.querySelector("[data-conta]").innerHTML =
+      esc(txt) + "<br><strong>= " + brl(pt.total) + " por m²</strong>" +
+      (area > 0 ? " &nbsp;·&nbsp; <strong>" + brl(Math.round(area * pt.total * 100) / 100) + "</strong> neste ambiente" : "");
+
     var w = c.querySelector("[data-warn]");
     var aviso = "";
-    if(a.peca === "90") aviso = "Peça maior que 80x80: o Bruno precisa olhar antes de fechar o preço.";
-    else if(area > 0 && a.tipo === "piso") aviso = "Entra como " + NOME_TIPO[tipoDe(a)].toLowerCase() + ".";
+    if(a.peca === "outro" && n(a.pecaPreco) <= 0) aviso = "Digite o preço por m² dessa peça, senão este ambiente fica zerado.";
+    else if(a.peca === "outro" && !a.pecaNome) aviso = "Anote o tamanho da peça para o Bruno saber do que se trata.";
     if(aviso){ w.textContent = aviso; w.style.display = ""; } else { w.style.display = "none"; }
   }
 
-  /* ---------- extras ---------- */
+  /* ================= lista de extras (passo 3) ================= */
   var extrasBox = document.getElementById("extras");
-  EXTRAS.forEach(function(x){
-    var row = el('<div class="extra">' +
-      '<span class="nome">' + esc(x.rot) + '<span class="un">' + x.un + ' · ' + brl(x.preco) + ' por ' + x.un + '</span></span>' +
-      '<input type="number" inputmode="decimal" step="0.01" min="0" id="ex-'+x.id+'" placeholder="0" aria-label="'+esc(x.rot)+'">' +
+  function linhaExtra(x){
+    var row = el('<div class="extra" data-ex="'+esc(x.id)+'">' +
+      '<span class="nome">' + esc(x.rot) + '<span class="un" data-un></span></span>' +
+      '<input type="number" inputmode="decimal" step="0.01" min="0" id="ex-'+esc(x.id)+'" placeholder="0" aria-label="'+esc(x.rot)+'">' +
     '</div>');
     var inp = row.querySelector("input");
+    inp.value = state.extras[x.id] || "";
     inp.addEventListener("input", function(){ state.extras[x.id] = inp.value; recalcular(); });
-    x.input = inp;
-    extrasBox.appendChild(row);
+    return row;
+  }
+  function desenharExtras(){
+    extrasBox.innerHTML = "";
+    precos.extras.forEach(function(x){ extrasBox.appendChild(linhaExtra(x)); });
+  }
+  function pintarExtras(){
+    precos.extras.forEach(function(x){
+      var row = extrasBox.querySelector('[data-ex="'+x.id+'"]');
+      if(row) row.querySelector("[data-un]").textContent = x.un + " · " + brl(x.preco) + " por " + x.un;
+    });
+  }
+
+  /* ================= tabela de preços (passo 5) ================= */
+  function campoPreco(valor, aoMudar, prefixo){
+    var inp = el('<input type="number" inputmode="decimal" step="0.01" min="0" value="'+esc(valor)+'" aria-label="'+esc(prefixo||"valor")+'">');
+    inp.addEventListener("input", function(){ aoMudar(inp.value); recalcular(); });
+    return inp;
+  }
+  function desenharTabela(){
+    /* base */
+    var tb = document.getElementById("tab-base"); tb.innerHTML = "";
+    TIPOS.forEach(function(t){
+      var row = el('<div class="preco-row"><span class="rot">'+esc(t.rot)+
+        '<span class="calc">'+esc(t.nota)+'</span></span></div>');
+      row.appendChild(campoPreco(precos.base[t.id], function(v){ precos.base[t.id] = n(v); }, "preço base " + t.rot));
+      tb.appendChild(row);
+    });
+
+    /* fator da peça */
+    var tp = document.getElementById("tab-peca"); tp.innerHTML = "";
+    PECAS.filter(function(x){ return !x.livre; }).forEach(function(pc){
+      var row = el('<div class="preco-row"><span class="rot">'+esc(pc.rot)+
+        '<span class="calc" data-ex-calc></span></span></div>');
+      var inp = el('<input type="number" inputmode="decimal" step="0.01" min="0" value="'+esc(precos.fator[pc.id])+'" aria-label="multiplicador '+esc(pc.rot)+'">');
+      inp.addEventListener("input", function(){ precos.fator[pc.id] = n(inp.value); recalcular(); });
+      row.appendChild(inp);
+      row.dataset.peca = pc.id;
+      tp.appendChild(row);
+    });
+    tp.appendChild(el('<p class="hint" style="margin-top:8px">Peça fora dessa lista: escolha <strong>Outro tamanho</strong> no ambiente e digite o preço do m² direto.</p>'));
+
+    /* paginação */
+    var tg = document.getElementById("tab-pag"); tg.innerHTML = "";
+    PAGS.forEach(function(pg){
+      var row = el('<div class="preco-row"><span class="rot">'+esc(pg.rot)+'</span></div>');
+      row.appendChild(campoPreco(precos.pag[pg.id], function(v){ precos.pag[pg.id] = n(v); }, "adicional " + pg.rot));
+      tg.appendChild(row);
+    });
+
+    /* extras */
+    var te = document.getElementById("tab-extras"); te.innerHTML = "";
+    precos.extras.forEach(function(x){
+      var custom = x.custom;
+      var row = el('<div class="preco-row"><span class="rot">'+esc(x.rot)+
+        '<span class="calc">por '+esc(x.un)+(custom ? ' · criado por você' : '')+'</span></span></div>');
+      var cel = el('<span class="dupla"></span>');
+      cel.appendChild(campoPreco(x.preco, function(v){ x.preco = n(v); }, "preço " + x.rot));
+      row.appendChild(cel);
+      if(custom){
+        var del = el('<button class="icon-btn" type="button" aria-label="Apagar serviço">−</button>');
+        del.addEventListener("click", function(){
+          precos.extras.splice(precos.extras.indexOf(x), 1);
+          delete state.extras[x.id];
+          desenharExtras(); desenharTabela(); recalcular();
+        });
+        cel.appendChild(del);
+      }
+      te.appendChild(row);
+    });
+
+    /* geral */
+    var tge = document.getElementById("tab-geral"); tge.innerHTML = "";
+    var rowMin = el('<div class="preco-row"><span class="rot">Valor mínimo por serviço' +
+      '<span class="calc">Orçamento abaixo disso sobe para este valor</span></span></div>');
+    rowMin.appendChild(campoPreco(precos.minimo, function(v){ precos.minimo = n(v); }, "valor mínimo"));
+    tge.appendChild(rowMin);
+    TIPOS.forEach(function(t){
+      var row = el('<div class="preco-row"><span class="rot">Produção em ' + esc(t.rot.toLowerCase()) +
+        '<span class="calc">m² por dia — define o prazo</span></span></div>');
+      row.appendChild(campoPreco(precos.prod[t.id], function(v){ precos.prod[t.id] = n(v); }, "produção " + t.rot));
+      tge.appendChild(row);
+    });
+  }
+
+  function pintarTabela(){
+    /* exemplo vivo ao lado de cada multiplicador */
+    Array.prototype.forEach.call(document.querySelectorAll('#tab-peca .preco-row'), function(row){
+      var id = row.dataset.peca;
+      var v = Math.round(precos.base.aberta * (precos.fator[id] || 0) * 100) / 100;
+      row.querySelector("[data-ex-calc]").textContent = "em área aberta fica " + brl(v) + "/m²";
+    });
+    var mudou = diferencas();
+    var av = document.getElementById("aviso-tabela");
+    if(mudou.length){
+      av.textContent = "Você mudou " + mudou.length + (mudou.length === 1 ? " preço" : " preços") +
+        " do padrão. Vai avisado na mensagem do WhatsApp.";
+      av.style.display = "";
+    } else {
+      av.style.display = "none";
+    }
+  }
+
+  function diferencas(){
+    var d = [];
+    TIPOS.forEach(function(t){
+      if(precos.base[t.id] !== PADRAO.base[t.id])
+        d.push("base " + t.rot.toLowerCase() + ": " + brl(PADRAO.base[t.id]) + " para " + brl(precos.base[t.id]));
+    });
+    PECAS.filter(function(x){return !x.livre;}).forEach(function(pc){
+      if(precos.fator[pc.id] !== PADRAO.fator[pc.id])
+        d.push("multiplicador " + pc.rot + ": " + num(PADRAO.fator[pc.id]) + " para " + num(precos.fator[pc.id]));
+    });
+    PAGS.forEach(function(pg){
+      if(precos.pag[pg.id] !== PADRAO.pag[pg.id])
+        d.push("paginação " + pg.rot.toLowerCase() + ": " + brl(PADRAO.pag[pg.id]) + " para " + brl(precos.pag[pg.id]));
+    });
+    precos.extras.forEach(function(x){
+      var orig = null;
+      for(var i=0;i<PADRAO.extras.length;i++) if(PADRAO.extras[i].id === x.id) orig = PADRAO.extras[i];
+      if(!orig) d.push("serviço novo " + x.rot + ": " + brl(x.preco) + " por " + x.un);
+      else if(orig.preco !== x.preco) d.push(x.rot + ": " + brl(orig.preco) + " para " + brl(x.preco));
+    });
+    if(precos.minimo !== PADRAO.minimo) d.push("mínimo por serviço: " + brl(PADRAO.minimo) + " para " + brl(precos.minimo));
+    TIPOS.forEach(function(t){
+      if(precos.prod[t.id] !== PADRAO.prod[t.id])
+        d.push("produção " + t.rot.toLowerCase() + ": " + num(PADRAO.prod[t.id],0) + " para " + num(precos.prod[t.id],0) + " m²/dia");
+    });
+    return d;
+  }
+
+  /* criar serviço novo */
+  var nsUn = "m²";
+  var nsUnBox = document.getElementById("ns-un");
+  UNIDADES.forEach(function(u){
+    var b = el('<button class="chip" type="button" data-v="'+esc(u)+'" aria-pressed="'+(u===nsUn)+'">'+esc(u)+'</button>');
+    b.addEventListener("click", function(){
+      nsUn = u;
+      Array.prototype.forEach.call(nsUnBox.children, function(c){
+        c.setAttribute("aria-pressed", String(c.dataset.v === nsUn));
+      });
+    });
+    nsUnBox.appendChild(b);
+  });
+  document.getElementById("ns-add").addEventListener("click", function(){
+    var nomeEl = document.getElementById("ns-nome"), precoEl = document.getElementById("ns-preco");
+    var nome = nomeEl.value.trim(), preco = n(precoEl.value);
+    if(!nome || preco <= 0){
+      var av = document.getElementById("aviso-tabela");
+      av.textContent = "Para criar um serviço, preencha o nome e o preço.";
+      av.style.display = "";
+      (!nome ? nomeEl : precoEl).focus();
+      return;
+    }
+    precos.extras.push({id:"c" + Date.now().toString(36), rot:nome, un:nsUn, preco:preco, custom:true});
+    nomeEl.value = ""; precoEl.value = "";
+    desenharExtras(); desenharTabela(); recalcular();
   });
 
-  /* ---------- cálculo + texto ---------- */
+  document.getElementById("reset-precos").addEventListener("click", function(){
+    if(!window.confirm("Voltar todos os preços para os valores originais?")) return;
+    precos = clonar(PADRAO);
+    Object.keys(state.extras).forEach(function(k){ if(k.charAt(0) === "c") delete state.extras[k]; });
+    desenharExtras(); desenharTabela(); recalcular();
+  });
+
+  /* ================= cálculo + texto ================= */
   var cli = {
     nome: document.getElementById("cli-nome"),
     obra: document.getElementById("cli-obra"),
@@ -723,7 +1046,7 @@
   }
 
   function recalcular(){
-    var areaTotal = 0, moTotal = 0, dias = 0, validos = [], visita = false;
+    var areaTotal = 0, moTotal = 0, dias = 0, validos = [];
 
     state.ambientes.forEach(function(a, i){
       pintarCartao(a, i + 1);
@@ -732,13 +1055,13 @@
       var pm = precoM2(a);
       var tot = Math.round(area * pm * 100) / 100;
       areaTotal += area; moTotal += tot;
-      dias += area / PROD[tipoDe(a)];
-      if(a.peca === "90") visita = true;
+      var prod = precos.prod[tipoDe(a)] || 0;
+      if(prod > 0) dias += area / prod;
       validos.push({a:a, area:area, pm:pm, tot:tot});
     });
 
     var extrasTotal = 0, extrasLista = [];
-    EXTRAS.forEach(function(x){
+    precos.extras.forEach(function(x){
       var q = n(state.extras[x.id]);
       if(q <= 0) return;
       var t = Math.round(q * x.preco * 100) / 100;
@@ -746,10 +1069,13 @@
       extrasLista.push({x:x, q:q, t:t});
     });
 
+    pintarExtras();
+    pintarTabela();
+
     moTotal = Math.round(moTotal * 100) / 100;
     extrasTotal = Math.round(extrasTotal * 100) / 100;
     var subtotal = Math.round((moTotal + extrasTotal) * 100) / 100;
-    var final = Math.max(subtotal, validos.length ? MINIMO : 0);
+    var final = Math.max(subtotal, validos.length ? precos.minimo : 0);
     var diasCheios = dias > 0 ? Math.ceil(dias) : 0;
 
     elTotal.textContent = brl(final);
@@ -759,10 +1085,9 @@
     elLin.innerHTML = validos.length
       ? '<div><span>Assentamento</span><span>' + brl(moTotal) + '</span></div>' +
         (extrasTotal ? '<div><span>Serviços extras</span><span>' + brl(extrasTotal) + '</span></div>' : "") +
-        (final > subtotal ? '<div><span>Mínimo por serviço</span><span>' + brl(MINIMO) + '</span></div>' : "")
+        (final > subtotal ? '<div><span>Mínimo por serviço</span><span>' + brl(precos.minimo) + '</span></div>' : "")
       : "";
 
-    // texto
     var L = [];
     L.push("*ORÇAMENTO — REVESTIMENTOS SIL*");
     L.push("Cliente: " + (state.cliente.nome || "—"));
@@ -772,13 +1097,11 @@
     L.push("");
     L.push("*AMBIENTES*");
     validos.forEach(function(v, i){
-      var pc = PECAS.filter(function(p){return p.id === v.a.peca})[0];
-      var pg = PAGS.filter(function(p){return p.id === v.a.pag})[0];
       L.push((i + 1) + ") " + v.a.nome +
         " | " + (v.a.tipo === "parede" ? "PAREDE" : "PISO") +
-        " | " + NOME_TIPO[tipoDe(v.a)] +
-        " | peça " + pc.rot +
-        " | " + pg.rot +
+        " | " + rotTipo(tipoDe(v.a)) +
+        " | peça " + rotPeca(v.a) +
+        " | " + rotPag(v.a.pag) +
         " | " + num(v.area) + " m²" +
         " | " + brl(v.pm) + "/m² = " + brl(v.tot));
     });
@@ -788,7 +1111,7 @@
       L.push("");
       L.push("*SERVIÇOS EXTRAS*");
       extrasLista.forEach(function(e){
-        L.push("- " + e.x.rot + ": " + num(e.q) + " " + e.x.un + " = " + brl(e.t));
+        L.push("- " + e.x.rot + ": " + num(e.q) + " " + e.x.un + " x " + brl(e.x.preco) + " = " + brl(e.t));
       });
     }
     L.push("");
@@ -797,7 +1120,13 @@
     if(extrasTotal) L.push("Extras: " + brl(extrasTotal));
     L.push("TOTAL: " + brl(final));
     L.push("Prazo estimado: " + diasCheios + (diasCheios === 1 ? " dia" : " dias"));
-    if(visita) L.push("ATENÇÃO: tem peça maior que 80x80 — precisa avaliar antes de fechar.");
+
+    var difs = diferencas();
+    if(difs.length){
+      L.push("");
+      L.push("*PREÇOS AJUSTADOS NESTA FICHA*");
+      difs.forEach(function(d){ L.push("- " + d); });
+    }
     if(state.obs.trim()){ L.push(""); L.push("*OBSERVAÇÃO*"); L.push(state.obs.trim()); }
     L.push("");
     L.push("Valores de mão de obra. Material por conta do cliente.");
@@ -809,8 +1138,11 @@
     var faltas = [];
     if(!state.cliente.nome.trim()) faltas.push("o nome do cliente");
     if(!validos.length) faltas.push("pelo menos um ambiente com nome e medida");
-    var incompleto = state.ambientes.filter(function(a){ return (a.nome && areaDe(a) <= 0) || (!a.nome && areaDe(a) > 0); }).length;
-    if(incompleto) faltas.push("o nome ou a medida de " + incompleto + " ambiente(s)");
+    var incompleto = state.ambientes.filter(function(a){
+      return (a.nome && areaDe(a) <= 0) || (!a.nome && areaDe(a) > 0) ||
+             (a.nome && areaDe(a) > 0 && a.peca === "outro" && n(a.pecaPreco) <= 0);
+    }).length;
+    if(incompleto) faltas.push("o nome, a medida ou o preço de " + incompleto + " ambiente(s)");
 
     if(faltas.length){
       elErro.textContent = "Falta preencher: " + faltas.join(", ") + ".";
@@ -821,9 +1153,10 @@
     }
 
     salvar();
+    salvarPrecos();
   }
 
-  /* ---------- botões gerais ---------- */
+  /* ================= botões gerais ================= */
   document.getElementById("add-amb").addEventListener("click", function(){
     var a = novoAmbiente();
     a.node.scrollIntoView({behavior:"smooth", block:"center"});
@@ -849,13 +1182,13 @@
   });
 
   document.getElementById("limpar").addEventListener("click", function(){
-    if(!window.confirm("Apagar tudo e começar uma ficha nova?")) return;
+    if(!window.confirm("Apagar os dados desta obra e começar uma ficha nova? Os preços que você ajustou continuam.")) return;
     try{ localStorage.removeItem(CHAVE); }catch(e){}
     state = {cliente:{nome:"",obra:"",tel:"",data:""}, ambientes:[], extras:{}, obs:""};
     lista.innerHTML = "";
     Object.keys(cli).forEach(function(k){ cli[k].value = ""; });
-    EXTRAS.forEach(function(x){ x.input.value = ""; });
     obsEl.value = "";
+    desenharExtras();
     hoje();
     novoAmbiente();
   });
@@ -866,17 +1199,36 @@
     cli.data.value = v; state.cliente.data = v;
   }
 
-  /* ---------- partida ---------- */
+  /* ================= partida ================= */
   function iniciar(){
-    var salvo = carregar();
-    if(salvo){
+    var pSalvos = carregar(CHAVE_PRECOS);
+    if(pSalvos){
+      ["base","fator","pag","prod"].forEach(function(g){
+        if(pSalvos[g]) Object.keys(precos[g]).forEach(function(k){
+          if(typeof pSalvos[g][k] === "number") precos[g][k] = pSalvos[g][k];
+        });
+      });
+      if(typeof pSalvos.minimo === "number") precos.minimo = pSalvos.minimo;
+      if(Array.isArray(pSalvos.extras)){
+        pSalvos.extras.forEach(function(x){
+          var atual = acharExtra(x.id);
+          if(atual){ if(typeof x.preco === "number") atual.preco = x.preco; }
+          else if(x.id && x.rot) precos.extras.push({id:x.id, rot:x.rot, un:x.un || "un", preco:x.preco || 0, custom:true});
+        });
+      }
+    }
+    desenharExtras();
+    desenharTabela();
+
+    var salvo = carregar(CHAVE);
+    if(salvo && salvo.ambientes){
       state.cliente = salvo.cliente || state.cliente;
       state.extras  = salvo.extras  || {};
       state.obs     = salvo.obs     || "";
       Object.keys(cli).forEach(function(k){ cli[k].value = state.cliente[k] || ""; });
-      EXTRAS.forEach(function(x){ x.input.value = state.extras[x.id] || ""; });
       obsEl.value = state.obs;
-      (salvo.ambientes || []).forEach(function(a){ novoAmbiente(a); });
+      desenharExtras();
+      salvo.ambientes.forEach(function(a){ novoAmbiente(a); });
     }
     if(!state.cliente.data) hoje();
     if(!state.ambientes.length) novoAmbiente();
